@@ -1,0 +1,5 @@
+roles:
+  - name: geerlingguy.nodejs
+collections:
+  - name: amazon.aws
+  - name: community.general

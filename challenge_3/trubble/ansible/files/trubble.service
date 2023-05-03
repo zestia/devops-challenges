@@ -1,0 +1,16 @@
+[Unit]
+Description=trubble
+After=network.target
+
+[Service]
+Environment="NODE_ENV=production"
+User=root
+WorkingDirectory=/opt
+ExecStart=/usr/bin/node index.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=trubble
+
+[Install]
+WantedBy=multi-user.target
