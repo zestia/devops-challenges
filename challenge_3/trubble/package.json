@@ -1,0 +1,24 @@
+{
+  "name": "trubble",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "trubble.js",
+  "scripts": {
+    "test": "echo \"Warning: no tests implemented\" && exit 1",
+    "build": "ncc build trubble.js -o dist",
+    "start": "node trubble.js"
+  },
+  "author": "zestia ltd",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
+    "express-rate-limit": "^6.7.0",
+    "pokedex-promise-v2": "^4.1.1",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.36.1"
+  }
+}

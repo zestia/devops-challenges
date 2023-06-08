@@ -1,0 +1,122 @@
+---
+- name: Deploy web app
+  hosts: localhost
+  become: false
+
+  vars:
+    users:
+      - user1
+
+  tasks:
+  
+    - name: Lookup existing AWS subnet id
+      ec2_vpc_subnet_info:
+        filters:
+          "tag:Name": "devops-challenge-public-us-east-1a"
+      register: subnet_info
+
+    # ubuntu 16.04 (Xenial Xerus)
+    - name: Create the EC2 instance
+      ec2_instance:
+        key_name: "{{ item }}"
+        instance_type: t3.micro
+        image_id: ami-0b0ea68c435eb488d
+        wait: true
+        vpc_subnet_id: "{{ subnet_info.subnets[0].id }}"
+        security_group: devops-challenge-allow-http
+        network:
+          assign_public_ip: true
+        tags:
+          Env: "dev"
+          Application: "devops-challenge"
+          Name: "devops-challenge-{{ item }}"
+      register: ec2_instance
+      loop: "{{ users }}"
+
+    - meta: refresh_inventory
+
+- name: Deploy web app
+  hosts: tag_Application_devops_challenge
+  become: true
+  gather_facts: true
+  user: ubuntu
+  tags:
+    - config
+
+  pre_tasks:
+    - name: Wait 600 seconds for target connection to become reachable/usable
+      ansible.builtin.wait_for_connection:
+        timeout: 600
+
+    - name: Wait for cloud-init to complete
+      shell: cloud-init status
+      register: cloud_init_install
+      retries: 60
+      delay: 5
+      until: 'cloud_init_install.stdout == "status: done"'
+      tags:
+        - molecule-notest
+
+    - name: Update the apt cache
+      apt:
+        update_cache: true
+        force_apt_get: true
+        cache_valid_time: 3600
+      become: true
+
+
+  roles:
+    - role: geerlingguy.nodejs
+      vars:
+        nodejs_version: "14.x"
+
+  post_tasks:
+
+    - name: Install an NGINX web server
+      yum:
+        name: nginx
+        state: present
+
+    - name: Configure NGINX to front the web app
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
+    
+    - name: copy NGINX error page
+      copy:
+        src: error.html
+        dest: /usr/share/nginx/html/error.html
+    
+    - name: Enable nginx and reload
+      systemd:
+        name: nginx
+        enabled: true
+        daemon_reload: true
+        state: restarted
+
+    - name: Copy web app files
+      copy:
+        src: "{{ item }}"
+        dest: /opt/
+      loop:
+        - ../dist/index.js
+        - ../dist/package.json
+
+    # TODO: web app Configuration management not implemented
+
+    - name: Add systemd unit file for web app
+      copy:
+        src: trubble.service
+        dest: /etc/systemd/system/
+      tags:
+       - systemd
+    
+    - name: Enable and start the web app
+      systemd:
+        name: trubble
+        enabled: true
+        daemon_reload: true
+        state: started
+      tags:
+        - start_app
+        - systemd
