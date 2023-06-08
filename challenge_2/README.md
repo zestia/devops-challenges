@@ -1,7 +1,7 @@
 # Challenge 2
 
 ## Instructions
-Using the scripting language or tools of your choice - Please provide a solution to create a CSV file containing a **full list** of countries obtained from the [REST Countries API](https://restcountries.eu) containing the following fields -
+Using the scripting language or tools of your choice - Please provide a solution to create a CSV file containing a **full list** of countries obtained from the [REST Countries API](https://restcountries.com/) containing the following fields -
 
 | Country Name | Capital City | Region | Population Size | Number of Currencies | Number of Languages |
 | --- | --- | --- | --- | --- | --- |
