@@ -3,13 +3,11 @@
 ## Instructions
 This repository contains a static HTML [site](site).
 
-Please provide a solution to host a copy of the site on a Vagrant VM or Docker container.
+Please provide an infrastructure as code based solution to host a copy of the site on AWS. You may use any AWS services you feel are suitable.
 
 Bonus points will be awarded for simplicity, security and usability.
 
-You may use any scripting language, configuration management or deployment software you feel is most appropriate but all dependencies (other than Vagrant or Docker) must be satisfied within the VM/container itself.
-
-Any images used should be remotely hosted and publically accessible or appropriate credentials provided.
+You may use any scripting language, configuration management or deployment software you feel is most appropriate.
 
 ## Solution Submission
 
