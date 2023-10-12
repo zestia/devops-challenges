@@ -1,0 +1,4 @@
+providers.tf
+*.log
+.DS_Store
+.terraform
