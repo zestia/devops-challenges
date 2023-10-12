@@ -1,9 +1,9 @@
 #Config TFC
 terraform {
   cloud {
-    organization = "devops-challenges"
+    organization = "Challenges"
     workspaces {
-      name = "devops-challenges"
+      name = "Challenges"
     }
   }
 }
